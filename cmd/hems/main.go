@@ -73,6 +73,7 @@ func (h *hems) run() {
 		log.Fatal(err)
 	}
 	configuration.SetAlternateIdentifier("Demo-HEMS-123456789")
+	configuration.SetInterfaces([]string{"lo"})
 
 	h.myService = service.NewService(configuration, h)
 	h.myService.SetLogging(h)
@@ -86,7 +87,16 @@ func (h *hems) run() {
 		os.Exit(0)
 	}
 
-	h.myService.RegisterRemoteSKI(remoteSki, true)
+	//h.myService.RegisterRemoteSKI(remoteSki, true)
+
+	go func() {
+		n := 20
+		fmt.Println("Wait " + strconv.Itoa(n) + "s for the remote service to be discovered.")
+		time.Sleep(time.Duration(n) * time.Second)
+
+		fmt.Println("Invoke pairing with remote service.")
+		h.myService.InitiateOrApprovePairingWithSKI(remoteSki)
+	}()
 
 	h.myService.Start()
 	// defer h.myService.Shutdown()

@@ -73,6 +73,7 @@ func (h *evse) run() {
 		log.Fatal(err)
 	}
 	configuration.SetAlternateIdentifier("Demo-EVSE-234567890")
+	configuration.SetInterfaces([]string{"lo"})
 
 	h.myService = service.NewService(configuration, h)
 	h.myService.SetLogging(h)
@@ -104,13 +105,13 @@ func (h *evse) VisibleRemoteServicesUpdated(service api.ServiceInterface, entrie
 func (h *evse) ServiceShipIDUpdate(ski string, shipdID string) {}
 
 func (h *evse) ServicePairingDetailUpdate(ski string, detail *shipapi.ConnectionStateDetail) {
-	if ski == remoteSki && detail.State() == shipapi.ConnectionStateRemoteDeniedTrust {
-		fmt.Println("The remote service denied trust. Exiting.")
-		h.myService.RegisterRemoteSKI(ski, false)
-		h.myService.CancelPairingWithSKI(ski)
-		h.myService.Shutdown()
-		os.Exit(0)
-	}
+	// if ski == remoteSki && detail.State() == shipapi.ConnectionStateRemoteDeniedTrust {
+	// 	fmt.Println("The remote service denied trust. Exiting.")
+	// 	h.myService.RegisterRemoteSKI(ski, false)
+	// 	h.myService.CancelPairingWithSKI(ski)
+	// 	h.myService.Shutdown()
+	// 	os.Exit(0)
+	// }
 }
 
 func (h *evse) AllowWaitingForTrust(ski string) bool {
